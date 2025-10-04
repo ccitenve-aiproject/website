@@ -165,23 +165,24 @@
         async function updateVisitCount(){
             const appsScriptUrl = "https://script.google.com/macros/s/AKfycbxz3Lb_3LINDVvo7mCL5R8lP7to2-6uCeO-lJCMxqRoWUL7N-5CFv_e_Sg6XzGRgaHJ/exec";
             try{
-                const postRes = await fetch(appsScriptUrl, { method: 'POST' });
+                const getRes = await fetch(appsScriptUrl);
+                if(!getRes.ok) throw new Error('GET failed');
+                const current = (await getRes.json()).count || 0;
+                const newCount = Number(current) + 1;
+                const postRes = await fetch(appsScriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ count: newCount })
+                });
                 if(postRes.ok){
                     const json = await postRes.json();
                     document.getElementById('visitCount').textContent = json.count;
                     return;
                 }
             }catch(err){
-                console.log('Apps Script POST increment failed:', err);
+                console.error('Visit count get/post failed:', err);
             }
-            try{
-                const res = await fetch(appsScriptUrl);
-                const data = await res.json();
-                document.getElementById('visitCount').textContent = data.count;
-            }catch(err){
-                console.error('Visit count fetch failed:', err);
-                document.getElementById('visitCount').textContent = '--';
-            }
+            document.getElementById('visitCount').textContent = '--';
         }
 
         updateVisitCount();

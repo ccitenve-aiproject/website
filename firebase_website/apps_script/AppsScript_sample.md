@@ -14,11 +14,25 @@ function doGet(e) {
 }
 
 function doPost(e) {
-  // Increment and return the new count
-  const newCount = incrementCount();
-  return ContentService
-    .createTextOutput(JSON.stringify({ count: newCount }))
-    .setMimeType(ContentService.MimeType.JSON);
+  // Accept JSON body { count: N } and overwrite sheet value with that count
+  try {
+    const payload = e.postData && e.postData.type === 'application/json' ? JSON.parse(e.postData.contents) : null;
+    if (payload && typeof payload.count !== 'undefined') {
+      const written = writeCount(Number(payload.count));
+      return ContentService
+        .createTextOutput(JSON.stringify({ count: written }))
+        .setMimeType(ContentService.MimeType.JSON);
+    } else {
+      // Fallback: return current value
+      return ContentService
+        .createTextOutput(JSON.stringify({ count: readCount() }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ error: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 function readCount() {
@@ -28,14 +42,12 @@ function readCount() {
   return Number(value) || 0;
 }
 
-function incrementCount() {
+function writeCount(n) {
   const ss = SpreadsheetApp.openById("<YOUR_SHEET_ID>");
   const sheet = ss.getSheetByName("meta");
   const range = sheet.getRange("A1");
-  const current = Number(range.getValue()) || 0;
-  const next = current + 1;
-  range.setValue(next);
-  return next;
+  range.setValue(n);
+  return n;
 }
 ```
 

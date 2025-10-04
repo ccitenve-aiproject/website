@@ -162,30 +162,28 @@
             });
         })
 
-        // 更新並顯示造訪次數：使用 Google Apps Script endpoint（POST 遞增，GET 讀取）
+        // 更新並顯示造訪次數：先 GET 目前數字、加 1，再 POST 回 Apps Script（覆寫）
         async function updateVisitCount(){
             const appsScriptUrl = "https://script.google.com/macros/s/AKfycbyxyILFKciGu9rlw3IYkvQQTaMKobKU9tVYNpOS8lBQodfEQCy8KvuTnqlFAQ5A38OY/exec";
             try{
-                // 嘗試以 POST 呼叫 Apps Script 去遞增並取得最新數字
-                const postRes = await fetch(appsScriptUrl, { method: 'POST' });
+                const getRes = await fetch(appsScriptUrl);
+                if(!getRes.ok) throw new Error('GET failed');
+                const current = (await getRes.json()).count || 0;
+                const newCount = Number(current) + 1;
+                const postRes = await fetch(appsScriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ count: newCount })
+                });
                 if(postRes.ok){
                     const json = await postRes.json();
                     document.getElementById('visitCount').textContent = json.count;
                     return;
                 }
             }catch(err){
-                console.log('Apps Script POST increment failed:', err);
+                console.error('Visit count get/post failed:', err);
             }
-
-            // 若 POST 失敗，回退至 GET（只讀，不會遞增）
-            try{
-                const res = await fetch(appsScriptUrl);
-                const data = await res.json();
-                document.getElementById('visitCount').textContent = data.count;
-            }catch(err){
-                console.error('Visit count fetch failed:', err);
-                document.getElementById('visitCount').textContent = '--';
-            }
+            document.getElementById('visitCount').textContent = '--';
         }
 
         updateVisitCount();
