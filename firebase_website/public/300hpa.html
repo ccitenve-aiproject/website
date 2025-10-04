@@ -164,7 +164,7 @@
 
         // 更新並顯示造訪次數：先 GET 目前數字、加 1，再 POST 回 Apps Script（覆寫）
         async function updateVisitCount(){
-            const appsScriptUrl = "https://script.google.com/macros/s/AKfycbyxyILFKciGu9rlw3IYkvQQTaMKobKU9tVYNpOS8lBQodfEQCy8KvuTnqlFAQ5A38OY/exec";
+            const appsScriptUrl = '/incrementVisitCount';
             try{
                 const getRes = await fetch(appsScriptUrl);
                 if(!getRes.ok) throw new Error('GET failed');

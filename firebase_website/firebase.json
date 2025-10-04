@@ -22,6 +22,12 @@
       "**/node_modules/**"
     ]
   },
+  "rewrites": [
+    {
+      "source": "/incrementVisitCount",
+      "function": "incrementVisitCount"
+    }
+  ],
   "functions": [
     {
       "source": "functions",

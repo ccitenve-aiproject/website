@@ -160,7 +160,7 @@ function toggleSidebar() {
         })
         
         async function updateVisitCount(){
-            const appsScriptUrl = "https://script.google.com/macros/s/AKfycbxz3Lb_3LINDVvo7mCL5R8lP7to2-6uCeO-lJCMxqRoWUL7N-5CFv_e_Sg6XzGRgaHJ/exec";
+            const appsScriptUrl = '/incrementVisitCount';
             try{
                 const getRes = await fetch(appsScriptUrl);
                 if(!getRes.ok) throw new Error('GET failed');
