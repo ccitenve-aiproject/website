@@ -162,23 +162,22 @@
             });
         })
 
-        // 更新並顯示造訪次數：先嘗試呼叫已部署的 Firebase Function（相對路徑 /incrementVisitCount），
-        // 若無法呼叫或未部署，則回退到原本的 Google Apps Script 讀取方法。
+        // 更新並顯示造訪次數：使用 Google Apps Script endpoint（POST 遞增，GET 讀取）
         async function updateVisitCount(){
-            const appsScriptUrl = "https://script.google.com/macros/s/AKfycbxz3Lb_3LINDVvo7mCL5R8lP7to2-6uCeO-lJCMxqRoWUL7N-5CFv_e_Sg6XzGRgaHJ/exec";
+            const appsScriptUrl = "https://script.google.com/macros/s/AKfycbyxyILFKciGu9rlw3IYkvQQTaMKobKU9tVYNpOS8lBQodfEQCy8KvuTnqlFAQ5A38OY/exec";
             try{
-                // 嘗試呼叫 Firebase Function（需部署）以遞增並取得最新數字
-                const funcRes = await fetch('/incrementVisitCount', { method: 'POST' });
-                if(funcRes.ok){
-                    const json = await funcRes.json();
+                // 嘗試以 POST 呼叫 Apps Script 去遞增並取得最新數字
+                const postRes = await fetch(appsScriptUrl, { method: 'POST' });
+                if(postRes.ok){
+                    const json = await postRes.json();
                     document.getElementById('visitCount').textContent = json.count;
                     return;
                 }
             }catch(err){
-                console.log('Firebase function increment failed or not available:', err);
+                console.log('Apps Script POST increment failed:', err);
             }
 
-            // 回退：呼叫 Google Apps Script（原本的讀取方式，可能只回傳目前數字而不會遞增）
+            // 若 POST 失敗，回退至 GET（只讀，不會遞增）
             try{
                 const res = await fetch(appsScriptUrl);
                 const data = await res.json();

@@ -165,14 +165,14 @@
         async function updateVisitCount(){
             const appsScriptUrl = "https://script.google.com/macros/s/AKfycbxz3Lb_3LINDVvo7mCL5R8lP7to2-6uCeO-lJCMxqRoWUL7N-5CFv_e_Sg6XzGRgaHJ/exec";
             try{
-                const funcRes = await fetch('/incrementVisitCount', { method: 'POST' });
-                if(funcRes.ok){
-                    const json = await funcRes.json();
+                const postRes = await fetch(appsScriptUrl, { method: 'POST' });
+                if(postRes.ok){
+                    const json = await postRes.json();
                     document.getElementById('visitCount').textContent = json.count;
                     return;
                 }
             }catch(err){
-                console.log('Firebase function increment failed or not available:', err);
+                console.log('Apps Script POST increment failed:', err);
             }
             try{
                 const res = await fetch(appsScriptUrl);
