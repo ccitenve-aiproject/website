@@ -54,7 +54,7 @@ firebase use --add  # choose or add your Firebase project
 
 ```bash
 cd /Your Directory/website/firebase_website
-firebase deploy --only hosting
+firebase deploy --only hosting, functions
 ```
 
 3. After deploy, visit your Firebase hosting URL (shown in the deploy output) to verify the site and counter.
