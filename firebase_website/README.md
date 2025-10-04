@@ -19,7 +19,7 @@ Install dependencies
 1. Install root-level dependencies (if any):
 
 ```bash
-cd /Users/yangshihchin/website/firebase_website
+cd /Your Directory/website/firebase_website
 npm install
 ```
 
@@ -34,7 +34,7 @@ Run locally with Firebase Emulator (recommended)
 1. From project root, start the hosting and functions emulators. This serves your static site and routes `/incrementVisitCount` to the local function:
 
 ```bash
-cd /Users/yangshihchin/website/firebase_website
+cd /Your Directory/website/firebase_website
 firebase emulators:start --only functions,hosting
 ```
 
@@ -53,8 +53,8 @@ firebase use --add  # choose or add your Firebase project
 2. Deploy hosting and functions together:
 
 ```bash
-cd /Users/yangshihchin/website/firebase_website
-firebase deploy --only hosting,functions
+cd /Your Directory/website/firebase_website
+firebase deploy --only hosting
 ```
 
 3. After deploy, visit your Firebase hosting URL (shown in the deploy output) to verify the site and counter.
