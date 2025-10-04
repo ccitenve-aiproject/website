@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI天氣預測模式展示 - 登入</title>
+  <script type="module" src="src/auth.js"></script>
+  <style>
+    body {
+      margin: 0;
+      color: #2c3e50; /* 深藍灰文字 */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #bccddc, #c9d8e0); /* 柔霧淺灰藍背景 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background-color: #f2f4f5; /* 卡其灰白區塊 */
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #35495e;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 90%;
+      padding: 12px 15px;
+      margin: 10px 0 20px 0;
+      background-color: #fff;
+      border: 1px solid #ccd3db;
+      border-radius: 5px;
+      color: #2c3e50;
+      font-size: 16px;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus {
+      border-color: #9db0c3;
+      box-shadow: 0 0 0 3px rgba(144, 164, 183, 0.3);
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #9cb5c9, #c1ced9);
+      color: #2c3e50;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #8da7b9, #b1c0cd);
+    }
+
+    p {
+      text-align: center;
+      font-size: 14px;
+      color: #5c6b78;
+    }
+
+    a {
+      color: #6a8ca4;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #loginError {
+      color: #d9534f;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>AI天氣預測模式展示</h1>
+    <h2>登入</h2>
+    <input type="email" id="loginEmail" placeholder="輸入 Email">
+    <input type="password" id="loginPassword" placeholder="輸入密碼">
+    <button id="loginBtn">登入</button>
+    <p>還沒有帳號？<a href="register.html"> 前往註冊</a></p>
+    <p id="loginError"></p>
+  </div>
+</body>
+</html>

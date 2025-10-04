@@ -1,0 +1,53 @@
+分頁example :850hpa
+登入功能連接
+圖片連接
+
+先傳sample給老師
+
+
+部署方法 @website folder
+
+部署
+"firebase deploy --only hosting"
+
+排錯--重新驗證
+firebase logout
+開vpn
+firebase login --reauth
+
+
+
+環資系上傳之圖檔格式EX
+3.12 00
+
+任務：
+
+
+進度：
+按鈕名稱依圖檔名顯示、格式化
+依據按鈕顯示圖檔
+完成google drive api啟用及api key匯入
+完成讀取google drive資料夾檔名，並顯示在按鈕上
+完成連結按鈕與圖片、只有FCNV2顯示圖片
+完成時間按鈕文字設定
+完成時間按鈕點擊後唯一變色
+按鈕和圖檔連接完成
+檔名更改程式完成 changefilename.py
+登入註冊完成
+AI颱風模型分頁新增完成
+
+待辦
+
+寄給老師雲端資料夾及更改檔名程式
+
+網站設定
+gmail帳號密碼
+enve.aiproj@gmail.com
+ccit1大2小
+
+放圖檔的雲端資料夾(請不要更動到資料夾本身，否則網頁無法正常連接，若要上傳新圖片修改資料夾內檔案即可)
+https://drive.google.com/drive/folders/1c3jdbYn_CXSyx6mUzpVwCdqH5yqG0QyG
+
+firebase專案管理區(用enve.aiproj@gmail.com登入)
+可於authentication手動新增/刪除使用者
+https://console.firebase.google.com/?pli=1

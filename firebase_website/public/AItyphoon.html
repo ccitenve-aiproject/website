@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI颱風模型</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="title-container">
+        <span class="title">AI颱風模型</span>
+       
+    </div>
+    <div class="grid-container" >
+        <div class="grid-title">AI模式</div>
+        <div class="grid-item" id="Aurora">Aurora</div>
+        <div class="grid-item" id="FCNV2">FCNV2</div>
+        <div class="grid-item" id="FourCastNet">FourCastNet</div>
+        <div class="grid-item" id="Graphcast">Graphcast</div>
+        <div class="grid-item" id="Pangu">Pangu</div>
+    </div>
+    <br>
+    <div class="grid-container" id="gridcontainer" ></div>
+    <div id="imageContainer"></div>
+    <img id="image" src="" alt="顯示圖片">
+    <button class="toggle-btn" onclick="toggleSidebar()">☰ MENU</button>
+
+    <!-- 側邊導航欄 -->
+    <div class="nav-sidebar" id="nav-sidebar">
+        <a href="main.html">首頁</a>
+        <a href="main.html">AI</a>
+        <div class="sidebar2" style="position: absolute; top: 75px;" id="850">
+            <a href="sfc.html">Surface</a>
+            <a href="850hpa.html">850hpa</a>
+            <a href="700hpa.html">700hpa</a>
+            <a href="500hpa.html">500hpa</a>
+            <a href="300hpa.html">300hpa</a>
+        </div>
+
+        <a href="https://www.jma.go.jp/bosai/numericmap/#type=nwp" target="_blank">日本</a> 
+        <a href="https://www.metoc.navy.mil/fnmoc/meteorology.html" target="_blank">美國</a>
+        <a href="europe.html">歐洲</a>
+        <a href="AItyphoon.html">AI颱風模型</a>
+        
+    </div>
+
+    <!-- 計數器盒子 -->
+    <div id="counter-box">
+        <p>本站造訪次數：<span id="visitCount">載入中...</span></p>
+    </div>
+
+  
+
+    
+    
+    <script>
+        //標記目前只有FCNV2模型按鈕可選擇
+        document.getElementById("FCNV2").style.border = "2px solid #333";
+
+        //控制側邊導航欄
+        function toggleSidebar() {
+            const sidebar = document.getElementById('nav-sidebar');
+            sidebar.classList.toggle('active');  // 切換 active 類別
+        }
+
+        //顯示圖片
+        let imageFilenames = [];
+        let imageDict = {};
+        async function loadFCNV2Images() {
+            const folderId = "11ZP1izHr9Koqf5gmKtKXUWJ2MU-AO_ez"; // 你的 Google Drive 資料夾 ID(網址最後一段)
+            const apiKey = "AIzaSyA8vgyaO-iAUY2MnktZ1344EjHtbLzi6Us"; // 你的 Google API 金鑰
+            //讀取檔案時檔案依據日期時間排列(orderby=name)
+            const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=${apiKey}&fields=files(id,name)&orderBy=name`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            // //圖片檔名
+            // imageFilenames = data.files.map(file => file.name);
+
+            // **顯示所有圖片(可能改)**
+            
+            const container = document.getElementById('imageContainer'); // 確保有一個容器放圖片
+            container.innerHTML = ""; // 清空容器，避免重複新增
+
+            data.files.forEach(file => {
+                const image = document.createElement('img');
+                image.classList.add('image')
+                document.getElementById('image').src = `https://lh3.googleusercontent.com/d/${file.id}`;
+                document.getElementById('image').style.display = "block";
+            });
+        }
+            
+           
+        
+        let model="";
+
+        //模型選擇判斷 model儲存選項
+        const gridItems = document.querySelectorAll('.grid-item');
+        const gridContainer = document.getElementById("gridcontainer"); // 找到 Grid 容器
+        gridItems.forEach(item =>{
+            item.addEventListener('click', function() {
+                gridItems.forEach(i => i.classList.remove('active'));
+                this.classList.toggle('active'); // 點擊後切換類別
+                model = this.id;
+
+                if(model == "FCNV2"){
+                    loadFCNV2Images();
+                }else{
+                    document.getElementById('image').style.display = "none" //清空原有圖片
+                }
+            });
+        })
+        
+        //計數器讀取次數
+        async function updateVisitCount(){
+            const appsScriptUrl = "https://script.google.com/macros/s/AKfycbxz3Lb_3LINDVvo7mCL5R8lP7to2-6uCeO-lJCMxqRoWUL7N-5CFv_e_Sg6XzGRgaHJ/exec";
+            try{
+                const funcRes = await fetch('/incrementVisitCount', { method: 'POST' });
+                if(funcRes.ok){
+                    const json = await funcRes.json();
+                    document.getElementById('visitCount').textContent = json.count;
+                    return;
+                }
+            }catch(err){
+                console.log('Firebase function increment failed or not available:', err);
+            }
+            try{
+                const res = await fetch(appsScriptUrl);
+                const data = await res.json();
+                document.getElementById('visitCount').textContent = data.count;
+            }catch(err){
+                console.error('Visit count fetch failed:', err);
+                document.getElementById('visitCount').textContent = '--';
+            }
+        }
+
+        updateVisitCount();
+        
+    </script>
+</body>

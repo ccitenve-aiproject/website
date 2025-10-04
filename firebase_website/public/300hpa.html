@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>300hPa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="title-container">
+        <span class="title">300hPa</span>
+       
+    </div>
+   
+    <div class="grid-container" >
+        <div class="grid-title">AI模式</div>
+        <div class="grid-item" id="Aurora">Aurora</div>
+        <div class="grid-item" id="FCNV2">FCNV2</div>
+        <div class="grid-item" id="FourCastNet">FourCastNet</div>
+        <div class="grid-item" id="Graphcast">Graphcast</div>
+        <div class="grid-item" id="Pangu">Pangu</div>
+    </div>
+    <br>
+    <div class="grid-container" id="gridcontainer" ></div>
+
+    <img id="image" src="" alt="顯示圖片">
+    <button class="toggle-btn" onclick="toggleSidebar()">☰ MENU</button>
+
+    <!-- 側邊導航欄 -->
+    <div class="nav-sidebar" id="nav-sidebar">
+        <a href="main.html">首頁</a>
+        <a href="main.html">AI</a>
+        <div class="sidebar2" style="position: absolute; top: 75px;" id="300">
+            <a href="sfc.html">Surface</a>
+            <a href="850hpa.html">850hpa</a>
+            <a href="700hpa.html">700hpa</a>
+            <a href="500hpa.html">500hpa</a>
+            <a href="300hpa.html">300hpa</a>
+        </div>
+
+        <a href="https://www.jma.go.jp/bosai/numericmap/#type=nwp" target="_blank">日本</a> 
+        <a href="https://www.metoc.navy.mil/fnmoc/meteorology.html" target="_blank">美國</a>
+        <a href="europe.html">歐洲</a>
+        <a href="AItyphoon.html">AI颱風模型</a>
+        
+        
+    </div>
+    <!-- 計數器盒子 -->
+    <div id="counter-box">
+        <p>本站造訪次數：<span id="visitCount">載入中...</span></p>
+    </div>
+
+  
+
+    
+    
+    <script>
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('nav-sidebar');
+            sidebar.classList.toggle('active');  // 切換 active 類別
+        }
+        
+        let imageFilenames = [];
+        let imageDict = {};
+        async function loadFCNV2Images() {
+            const folderId = "1NAecOdXnD0bCcJ_rm7lGLBa8dPWQkwdP"; // 你的 Google Drive 資料夾 ID
+            const apiKey = "AIzaSyA8vgyaO-iAUY2MnktZ1344EjHtbLzi6Us"; // 你的 Google API 金鑰
+            //讀取檔案時檔案依據日期時間排列(orderby=name)
+            const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=${apiKey}&fields=files(id,name)&orderBy=name`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            //圖片檔名
+            imageFilenames = data.files.map(file => file.name);
+
+            // 以數字為主鍵排序，避免 '10' 會排在 '9' 之前的字串排序問題
+            imageFilenames.sort((a, b) => {
+                const aNum = parseInt(a.split('.')[0], 10);
+                const bNum = parseInt(b.split('.')[0], 10);
+                if (!isNaN(aNum) && !isNaN(bNum)) return aNum - bNum;
+                return a.localeCompare(b);
+            });
+
+            // 建立檔名對應 ID 的 Dictionary
+            data.files.forEach(file => {
+                imageDict[file.name] = file.id; 
+            });
+            console.log(imageDict); // 測試是否正確建立 Dictionary
+            console.log(imageFilenames);
+
+            // 確保 Dictionary 加載完畢後才執行按鈕綁定
+            bindButtons(imageDict);
+        }
+        
+        
+        
+        function formatButtonfromFilename(filename){
+            // 支援像 1.08 或 10.12 這類用 '.' 分隔的檔名
+            const parts = filename.split('.');
+            const left = parts[0] || '';
+            const right = parts[1] || '';
+            // 右邊若以 0 開頭，去除前導 0
+            const time = right.replace(/^0+/, '') || right;
+            return `${left}/${time}時`;
+        }
+        
+        const gridItems2 = document.querySelectorAll('.grid-item2');
+        // 自動建立按鈕，讓它們顯示對應的時間，設定點擊時顯示對應圖片
+        function bindButtons(imageDict){ //包進function確保imageDict抓到資料才執行
+            const gridContainer = document.getElementById("gridcontainer"); // 找到 Grid 容器
+            gridContainer.innerHTML = ""; // 清空原有按鈕
+            imageFilenames.forEach((filename, index) =>{
+                //建立button
+                let button = document.createElement("div"); // 創建按鈕容器
+                button.classList.add("grid-item2"); // 套用class
+                button.id = `button${index}`; // 設定唯一 ID
+                button.innerText = formatButtonfromFilename(filename);
+                
+                button.onclick = function () {
+                    //點擊的按鈕變色
+                    document.querySelectorAll(".grid-item2").forEach(button => { // 先重置所有按鈕顏色
+                        button.classList.remove("active");
+                    }); 
+                    this.classList.toggle('active'); // 點擊後切換類別
+
+                    if(model=='FCNV2'){
+                        let imageId = imageDict[filename]; // 從 Dictionary 拿圖片 ID
+                        if (imageId) {
+                            document.getElementById('image').src = `https://lh3.googleusercontent.com/d/${imageId}`;
+                            document.getElementById('image').style.display = "block";
+                        } else {
+                            console.error("圖片 ID 未找到:", filename);
+                        }
+                    }
+                    else{
+                        document.getElementById('image').style.display = "none"
+                    }
+                   
+                };
+                gridContainer.appendChild(button);
+            });
+        }
+        
+        let model="";
+
+        //模型選擇判斷 model儲存選項
+        const gridItems = document.querySelectorAll('.grid-item');
+        const gridContainer = document.getElementById("gridcontainer"); // 找到 Grid 容器
+        gridItems.forEach(item =>{
+            item.addEventListener('click', function() {
+                gridItems.forEach(i => i.classList.remove('active'));
+                this.classList.toggle('active'); // 點擊後切換類別
+                model = this.id;
+
+                if(model == "FCNV2"){
+                    loadFCNV2Images();
+                }else{
+                    gridContainer.innerHTML = ""; // 清空原有按鈕
+                    document.getElementById('image').style.display = "none" //清空原有圖片
+                }
+            });
+        })
+
+        // 更新並顯示造訪次數：先嘗試呼叫已部署的 Firebase Function（相對路徑 /incrementVisitCount），
+        // 若無法呼叫或未部署，則回退到原本的 Google Apps Script 讀取方法。
+        async function updateVisitCount(){
+            const appsScriptUrl = "https://script.google.com/macros/s/AKfycbxz3Lb_3LINDVvo7mCL5R8lP7to2-6uCeO-lJCMxqRoWUL7N-5CFv_e_Sg6XzGRgaHJ/exec";
+            try{
+                // 嘗試呼叫 Firebase Function（需部署）以遞增並取得最新數字
+                const funcRes = await fetch('/incrementVisitCount', { method: 'POST' });
+                if(funcRes.ok){
+                    const json = await funcRes.json();
+                    document.getElementById('visitCount').textContent = json.count;
+                    return;
+                }
+            }catch(err){
+                console.log('Firebase function increment failed or not available:', err);
+            }
+
+            // 回退：呼叫 Google Apps Script（原本的讀取方式，可能只回傳目前數字而不會遞增）
+            try{
+                const res = await fetch(appsScriptUrl);
+                const data = await res.json();
+                document.getElementById('visitCount').textContent = data.count;
+            }catch(err){
+                console.error('Visit count fetch failed:', err);
+                document.getElementById('visitCount').textContent = '--';
+            }
+        }
+
+        updateVisitCount();
+
+    </script>
+</body>

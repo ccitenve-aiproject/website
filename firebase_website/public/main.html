@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI天氣預測模式展示</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="title-container">
+        <div class="index-title">AI天氣預測模式展示網站</div>
+    </div>
+    <br><br><br>
+    <div class="grid-container" >
+        <a href="sfc.html" target="_blank" class="grid-item">Surface</a>
+        <a href="850hpa.html" target="_blank" class="grid-item">850hpa</a>
+        <a href="700hpa.html" target="_blank" class="grid-item">700hpa</a>
+        <a href="500hpa.html" target="_blank" class="grid-item">500hpa</a>
+        <a href="300hpa.html" target="_blank" class="grid-item">300hpa</a>
+        <a href="https://www.jma.go.jp/bosai/numericmap/#type=nwp" target="_blank" class="grid-item">日本</a>
+        <a href="https://www.metoc.navy.mil/fnmoc/meteorology.html" target="_blank" class="grid-item">美國</a>
+        <a href="europe.html" class="grid-item">歐洲</a>
+        <a href="AItyphoon.html" target="_blank" class="grid-item">AI颱風模型</a>
+    </div>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰ MENU</button>
+    <div class="nav-sidebar" id="nav-sidebar">
+        <a href="index.html">首頁</a>
+        <a href="index.html">AI</a>
+        <div class="sidebar2" style="position: absolute; top: 75px;" id="index">
+            <a href="sfc.html">Surface</a>
+            <a href="850hpa.html">850hpa</a>
+            <a href="700hpa.html">700hpa</a>
+            <a href="500hpa.html">500hpa</a>
+            <a href="300hpa.html">300hpa</a>
+        </div>
+
+        <a href="https://www.jma.go.jp/bosai/numericmap/#type=nwp" target="_blank">日本</a> 
+        <a href="https://www.metoc.navy.mil/fnmoc/meteorology.html" target="_blank">美國</a>
+        <a href="europe.html">歐洲</a>
+        <a href="AItyphoon.html">AI颱風模型</a>
+    </div>
+
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('nav-sidebar');
+            sidebar.classList.toggle('active');  // 切換 active 類別
+        }
+        
+    </script>
+</body>
+</html>
