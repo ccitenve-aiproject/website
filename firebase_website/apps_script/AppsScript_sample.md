@@ -38,14 +38,14 @@ function doPost(e) {
 function readCount() {
   const ss = SpreadsheetApp.openById("<YOUR_SHEET_ID>");
   const sheet = ss.getSheetByName("meta");
-  const value = sheet.getRange("A1").getValue();
+  const value = sheet.getRange("A2").getValue();
   return Number(value) || 0;
 }
 
 function writeCount(n) {
   const ss = SpreadsheetApp.openById("<YOUR_SHEET_ID>");
   const sheet = ss.getSheetByName("meta");
-  const range = sheet.getRange("A1");
+  const range = sheet.getRange("A2");
   range.setValue(n);
   return n;
 }
