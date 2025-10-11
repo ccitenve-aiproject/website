@@ -163,7 +163,7 @@
 
         async function updateVisitCount(){
             try{
-                const res = await fetch('/incrementVisitCount', { method: 'POST' });
+                const res = await fetch('https://script.google.com/macros/s/AKfycbxK4wkGlnssoq19eDzhsTw2thapLLHmYxayFSi7C0RDno0ZkbBMtol-6ZmZk0Sk9fE87A/exec', { method: 'POST' });
                 if(!res.ok) throw new Error('POST failed');
                 const json = await res.json();
                 document.getElementById('visitCount').textContent = json.count;
@@ -177,4 +177,5 @@
         updateVisitCount();
         
     </script>
+
 </body>
